@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO: if some existing files has been modified, then the script should not overwrite them.
+
 set -e
 
 . "$(dirname "$0")/scripts/_.sh"
@@ -52,6 +54,9 @@ if [ -f ~/.zshrc ]; then
 else
     debug "~/.zshrc does not exist, skipping..."
 fi
+
+cd $DEST
+npm install
 
 success "AIDD-C installed successfully."
 tree $DEST

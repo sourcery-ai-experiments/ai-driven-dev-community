@@ -4,10 +4,20 @@
  * It reads environment variables, validates the OpenAI API key, and provides functions to call the OpenAI API.
  */
 
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
-const readline = require('readline');
+// const fs = require('fs');
+// const path = require('path');
+// const https = require('https');
+// const readline = require('readline');
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Convert the URL object to a file path
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+
+import clipboardy from 'clipboardy';
+import fs from 'fs';
+import https from 'https';
+import readline from 'readline';
 
 // Redefine console.error to always print in red
 console.error = (function(origError) {
@@ -21,6 +31,13 @@ console.warn = (function(origWarn) {
         origWarn('\x1b[33m', ...args, '\x1b[0m');
     };
 })(console.warn);
+
+
+console.info = (function(origInfo) {
+    return function(...args) {
+        origInfo('\x1b[32m', ...args, '\x1b[0m');
+    };
+})(console.info);
 
 // Load environment variables
 const loadEnv = () => {
@@ -50,7 +67,7 @@ if (!process.env.OPENAI_API_KEY) {
 
 // Gen-AI parameters
 const GEN_AI_MODEL = 'gpt-4o';
-const GEN_AI_MAX_TOKENS = 300;
+const GEN_AI_MAX_TOKENS = 600;
 const GEN_AI_TEMPERATURE = 0.7;
 const GEN_AI_SYSTEM_MESSAGE = `
 Act as a Senior Software Engineer that is experienced in software craft.
@@ -135,8 +152,8 @@ const callOpenAiApi = async (systemMessage, prompt, maxTokens = GEN_AI_MAX_TOKEN
 const openaiApiCalculateCost = (usage, model = GEN_AI_MODEL) => {
     const pricing = {
         'gpt-4o': {
-            'prompt': 0.5,
-            'completion': 0.15,
+            'prompt': 0.05,
+            'completion': 0.015,
         }
     };
 
@@ -163,14 +180,19 @@ const openaiApiCalculateCost = (usage, model = GEN_AI_MODEL) => {
     return parseFloat(totalCost);
 };
 
-
 /**
  * Asks the AI a question.
  * @param {string} prompt - The prompt to send to the AI.
  */
 const askAi = async (prompt) => {
     console.log(`\n📝 Prompt:`);
-    console.warn(`--------------------\n${prompt}\n--------------------\n`);
+    console.log(`--------------------`);
+    console.warn(prompt);
+    console.log(`--------------------`);
+    
+    clipboardy.writeSync(prompt);
+
+    console.info(`📋 Prompt copied to clipboard.\n`);
 
     const rl = readline.createInterface({
         input: process.stdin,
