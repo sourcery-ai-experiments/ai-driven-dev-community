@@ -20,13 +20,20 @@ if [ ! -d "$TMP/ai-driven-dev-community-main" ]; then
   exit 1
 fi
 
-if [ -d "$DEST" ]; then
-  debug "Directory '$DEST' already exists, removing..."
-  rm -rf $DEST
-fi
+debug "Create DEST folder if not exist."
+mkdir -p $DEST
 
-debug "Move the subfolder $SOURCE_FOLDER_TO_UNZIP to $DEST."
-mv -v $TMP/ai-driven-dev-community-main/$SOURCE_FOLDER_TO_UNZIP $DEST
+debug "Move files from $TMP to $DEST."
+for file in $(find $TMP/ai-driven-dev-community-main/$SOURCE_FOLDER_TO_UNZIP -type f); do
+  dest_file="${DEST}/${file#$TMP/ai-driven-dev-community-main/$SOURCE_FOLDER_TO_UNZIP/}"
+  dest_dir=$(dirname "$dest_file")
+  mkdir -p "$dest_dir"
+  if [ -f "$dest_file" ]; then
+    notice "File $dest_file already exists and will not be updated."
+  else
+    mv -v "$file" "$dest_file"
+  fi
+done
 
 chmod +x $DEST/scripts/*.sh
 
@@ -52,6 +59,9 @@ if [ -f ~/.zshrc ]; then
 else
     debug "~/.zshrc does not exist, skipping..."
 fi
+
+cd $DEST
+npm install
 
 success "AIDD-C installed successfully."
 tree $DEST

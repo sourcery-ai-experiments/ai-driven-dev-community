@@ -25,19 +25,15 @@ fi
 # --------------------
 PROMPT=$(cat <<EOF
 Goal:
-Generate only a commit message to summarize the changes made.
+Generate git add + git commit message for every changes in the code.
 
 Rules:
 - Should be formatted in Conventional Commit.
 - Remain consistent with the last commit messages if possibles.
 - Focus on describing the changes made, not the implementation details.
-
-Important note:
-Commits should be small and focused on a single change.
-If there is too many changes, provide git commands to:
-- Reset and change directory to the root of the repository.
-- Break down the changes into smaller, more focused commits for each files.
-- Generate a commit message for each commit.
+- Commits should be small and focused on a single change.
+- 1 commit message can have multiple files changes.
+- Answer with shell script ONLY.
 
 Previous commit messages:
 $PREV_COMMIT_MSG

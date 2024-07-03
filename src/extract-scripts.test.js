@@ -11,7 +11,7 @@ describe('getScriptsContent', () => {
 
 echo "test"
 
-# source: scripts/project-documentation-typescript.sh
+# source: scripts/generated/project-documentation-typescript.sh
 \`\`\`
     `;
 
@@ -20,7 +20,7 @@ echo "test"
 
     // Assert
     expect(scripts).toEqual([
-      `#!/bin/bash\n\necho "test"\n\n# source: scripts/project-documentation-typescript.sh`,
+      `#!/bin/bash\n\necho "test"\n\n# source: scripts/generated/project-documentation-typescript.sh`,
     ]);
   });
 });
